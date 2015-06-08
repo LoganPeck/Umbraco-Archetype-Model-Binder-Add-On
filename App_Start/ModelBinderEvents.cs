@@ -8,6 +8,8 @@ using Umbraco.Core.Events;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using umbraco.interfaces;
+using Archetype.PropertyConverters;
+using Umbraco.Core.PropertyEditors;
 
 namespace ScyllaPlugins.ArchetypeModelBuilder.App_Start
 {
@@ -18,6 +20,17 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.App_Start
         {
             DataTypeService.Saved += CreateStronglyTypedModel; //On data type saved.
         }
+
+
+        protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+        {
+            //Since we are overriding the ArchetypeValueConverter so we can resolve our strong types, we need to remove the original one. If we don't, Umbraco will complain that we have 
+            //multiple property editors for Imulus.Archetype.
+            PropertyValueConvertersResolver.Current.RemoveType<ArchetypeValueConverter>();
+
+            base.ApplicationStarting(umbracoApplication, applicationContext);
+        }
+
 
         protected void CreateStronglyTypedModel(IDataTypeService dts, SaveEventArgs<IDataTypeDefinition> e)
         {
