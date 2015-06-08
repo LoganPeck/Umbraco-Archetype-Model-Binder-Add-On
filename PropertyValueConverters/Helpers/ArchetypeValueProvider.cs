@@ -38,7 +38,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
             //Determines if we need a list of the interface/class or if a single instance is fine.
             return ResolveListOrSingleModel(ruleChecker, archetypeType);
         }
-
+        
 
         /// <summary>
         /// Determines if this archetype needs an interface or just a class
@@ -55,7 +55,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
             {
                 string interfaceName = ArchetypeValueProvider.StringToInterfaceName(dataTypeName);
 
-                archetypeType = Type.GetType(GetModelsNamespace() + "." + interfaceName);
+                archetypeType = Type.GetType(GetModelsNamespace() + "." + interfaceName + ", " + GetAssemblyName());
             }
             else //No multiple fieldsets so just a class as the type
             {
@@ -100,6 +100,12 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
         {
             //From the web.config under <appSetting>
             return ConfigurationManager.AppSettings["CustomModelBuilderNamespace"];
+        }
+
+        public static string GetAssemblyName()
+        {
+            //Im sure there is a better way to do this. This is so we know what assembly we are looking for the strongly typed model class (cs) file in.
+            return ConfigurationManager.AppSettings["CustomModelBuilderAssembly"];
         }
     }
 }

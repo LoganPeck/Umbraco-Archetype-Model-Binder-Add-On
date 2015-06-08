@@ -97,9 +97,6 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters
         /// <returns>The type that you can expect this archetype to resolve to when strongly typed.</returns>
         public Type GetPropertyValueType(Umbraco.Core.Models.PublishedContent.PublishedPropertyType propertyType)
         {
-            //Get Our Custom namespace
-            string customModelNamespace = ArchetypeValueProvider.GetModelsNamespace();
-
             IDataTypeService dts = ApplicationContext.Current.Services.DataTypeService;
 
             ArchetypePreValue archPrevalue = GetArchetypePrevalues(propertyType.DataTypeId, dts);
