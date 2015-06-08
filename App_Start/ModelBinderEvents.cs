@@ -26,8 +26,11 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.App_Start
 
             if (definition == null) return;
 
+            //I'm not sure if this is an Umbraco bug or if this is expected behavior but the prevalues are stale if we get them throught the Data Type Service. If we pull them directly from the database,
+            //everything seems to be fine. 
             IEnumerable<string> prevalues = ApplicationContext.Current.DatabaseContext.Database.Fetch<string>("SELECT value FROM dbo.cmsDataTypePreValues WHERE datatypeNodeId = @0", definition.Id);
-            //Get the prevalues.
+            
+            //Old way of getting the prevalues that gave stale results.
             //IEnumerable<string> prevalues = dts.GetPreValuesByDataTypeId(definition.Id);
 
             if (prevalues == null || !prevalues.Any()) return;
