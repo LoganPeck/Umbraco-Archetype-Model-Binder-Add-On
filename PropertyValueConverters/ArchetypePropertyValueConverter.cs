@@ -93,7 +93,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters
         /// <summary>
         /// This is a very important method. This will determine what type we can expect the archetype to give back in a strongly typed form.
         /// </summary>
-        /// <param name="propertyType">The property type that we are inquiring about the Type..</param>
+        /// <param name="propertyType">The property type that we are inquiring about the Type..</param>im
         /// <returns>The type that you can expect this archetype to resolve to when strongly typed.</returns>
         public Type GetPropertyValueType(Umbraco.Core.Models.PublishedContent.PublishedPropertyType propertyType)
         {

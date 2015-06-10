@@ -64,7 +64,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
                 string className = fieldset.Alias.ToFirstUpperInvariant();
 
                 //string className = propertyType.PropertyTypeAlias.UppercaseFirstLetter();
-                archetypeType = Type.GetType(GetModelsNamespace() + "." + className);
+                archetypeType = Type.GetType(GetModelsNamespace() + "." + className + ", " + GetAssemblyName());
             }
 
             return archetypeType;
