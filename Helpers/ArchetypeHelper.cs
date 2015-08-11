@@ -44,7 +44,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.Helpers
                 {
                     // Get list of configured properties and their types and map them to the deserialized archetype model
                     var preValue = GetArchetypePreValueFromPreValuesCollection(dataTypePreValues);
-                    //RetrieveAdditionalProperties(ref archetype, preValue);
+                    RetrieveAdditionalProperties(ref archetype, preValue);
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +68,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.Helpers
                 {
                     // Get list of configured properties and their types and map them to the deserialized archetype model
                     var preValue = GetArchetypePreValueFromDataTypeId(dataTypeId);
-                    //RetrieveAdditionalProperties(ref archetype, preValue, hostContentType);
+                    RetrieveAdditionalProperties(ref archetype, preValue, hostContentType);
                 }
                 catch (Exception ex)
                 {
@@ -125,7 +125,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.Helpers
                 () => _app.Services.DataTypeService.GetDataTypeDefinitionById(guid));
         }
 
-        /*
+        
         /// <summary>
         /// Retrieves additional metadata that isn't available on the stored model of an Archetype
         /// </summary>
@@ -151,7 +151,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.Helpers
                     }
                 }
             }
-        }*/
+        }
 
         /// <summary>
         /// Retrieves additional metadata that isn't available on the stored model of an ArchetypePreValue

@@ -10,7 +10,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Factori
     {
         public BuilderInterfaces.AbstractCodeableProperty CreateProperty(Type propertyType, string propertyName)
         {
-            return new CodeableProperty(propertyType, propertyName);
+            return new CodeableProperty(propertyType, propertyName, Accessibility.PUBLIC);
         }
     }
 }

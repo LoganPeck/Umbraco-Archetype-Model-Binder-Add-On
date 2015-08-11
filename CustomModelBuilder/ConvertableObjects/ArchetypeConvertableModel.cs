@@ -15,6 +15,8 @@ using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Helpers;
 using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Managers;
 using ScyllaPlugins.ArchetypeModelBuilder.Helpers;
 using ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers;
+using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Codables;
+using System.Text;
 
 namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.ConvertableObjects
 {
@@ -152,13 +154,35 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.ConvertableObje
             
             //Create the model before we put properties on it, we have to do this because if this 
 
+            //Create the constructor that will set the fieldset property equal to the fieldset passed in.
+            StringBuilder constructorBody = new StringBuilder();
+            constructorBody.AppendLine("this.fieldset = fieldsetIn;");
+            currentClass.AddConstructor(Accessibility.PUBLIC, new List<CodeableParameter>() { new CodeableParameter(typeof(ArchetypeFieldsetModel), "fieldsetIn") }, constructorBody);
+
+            //create the fieldset member on the class
+            currentClass.AddProperty(typeof(ArchetypeFieldsetModel), "fieldset", Accessibility.PUBLIC, false);
+
             foreach(var property in fieldset.Properties)
             {
                 IDataTypeDefinition dataTypeDef = this._dts.GetDataTypeDefinitionById(property.DataTypeGuid);
                 
                 Type stronglyTypedType = UmbracoModelsHelper.GetDataTypeType(dataTypeDef);
 
-                currentClass.AddProperty(stronglyTypedType, property.Alias.ToFirstUpperInvariant());
+                string propertyTypeString = stronglyTypedType.FullName;
+                if (stronglyTypedType.Name.Equals(typeof(IEnumerable<>).Name))
+                {
+                    Type typeParam = stronglyTypedType.GenericTypeArguments[0];
+                    propertyTypeString = "System.Collections.Generic.IEnumerable<" + typeParam.FullName + ">";
+                }
+
+                StringBuilder propertyBody = new StringBuilder();
+
+                propertyBody.AppendLine("\t\t\tget");
+                propertyBody.AppendLine("\t\t\t{");
+                propertyBody.AppendLine("\t\t\t\t"+string.Format("return this.fieldset.GetValue<{0}>(\"{1}\");", propertyTypeString, property.Alias));
+                propertyBody.AppendLine("\t\t\t}");
+
+                currentClass.AddProperty(stronglyTypedType, property.Alias.ToFirstUpperInvariant(), Accessibility.PUBLIC, true, propertyBody);
             }
 
             classBuilder.CommitCodeEntity();

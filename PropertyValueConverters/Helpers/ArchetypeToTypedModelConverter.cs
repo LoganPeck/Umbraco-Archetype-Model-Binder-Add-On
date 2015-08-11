@@ -143,8 +143,9 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
             }
 
             //Create an instance of the strongly typed class that represents this archetype's fieldset.
-            object classInstance = Activator.CreateInstance(createType);
+            object classInstance = Activator.CreateInstance(createType, new object[]{fieldset});
 
+            /*
             //Get the properties from the strongly typed class that we generated for the archetype.
             PropertyInfo[] classProperties = createType.GetProperties();
 
@@ -172,6 +173,7 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.PropertyValueConverters.Helpers
                     classProperty.SetValue(classInstance, propertyValue);
                 }
             }
+            */
 
             return classInstance;
         }

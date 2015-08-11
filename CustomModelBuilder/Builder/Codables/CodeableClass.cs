@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.BuilderInterfaces;
 using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Factories;
+using ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Codables;
 
 namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Helpers
 {
@@ -50,6 +51,25 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Helpers
             
             this._sb.AppendLine("\t{"); //start the class
 
+            //Constructors
+            foreach(CodeableConstructor constructor in this._constructors)
+            {
+                this._sb.AppendLine("");
+                string constructorLine = String.Format("\t\t{0} {1} (", constructor.accessibility, this._className);
+                foreach(CodeableParameter param in constructor.parameters)
+                {
+                    constructorLine += param.ToCode() + ",";
+                }
+                constructorLine = constructorLine.TrimEnd(',');
+                constructorLine += ")";
+                this._sb.AppendLine(constructorLine);
+                this._sb.AppendLine("\t\t{");
+                this._sb.AppendLine("\t\t\t"+constructor.constructorBody.ToString());
+                this._sb.AppendLine("\t\t}");
+            }
+
+            this._sb.AppendLine("");
+
             //PROPERTIES
             foreach (CodeableProperty cp in this._properties)
             {
@@ -58,13 +78,18 @@ namespace ScyllaPlugins.ArchetypeModelBuilder.CustomModelBuilder.Builder.Helpers
             //End Properties.
         }
 
+        public override void AddConstructor(Accessibility accessibility, List<CodeableParameter> parameters, StringBuilder constructorBody)
+        {
+            this._constructors.Add(new CodeableConstructor(accessibility, parameters, constructorBody));
+        }
+
        
-        public override void AddProperty(Type type, string propertyName)
+        public override void AddProperty(Type type, string propertyName, Accessibility accessibility, bool auto = false, StringBuilder propertyBody = null)
         {
             if (type == null) throw new ArgumentNullException("type");
             if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
 
-            this._properties.Add(new CodeableProperty(type, propertyName));
+            this._properties.Add(new CodeableProperty(type, propertyName, accessibility, auto, propertyBody));
         }
 
 
